@@ -1,8 +1,8 @@
 const body = document.querySelector('body')
 const searchBar = document.querySelector('.search-container');
 const gallery = document.getElementById('gallery');
-const url = 'https://randomuser.me/api/?nat=us'
-// const url = 'https://fsjs-public-api-backup.herokuapp.com/api'
+// const url = 'https://randomuser.me/api/?results=12'
+const url = 'https://fsjs-public-api-backup.herokuapp.com/api/'
 
 
 // ------------------------------------------
@@ -61,29 +61,43 @@ const generateCardHTML = (img, firstName, lastName, email, city, state) => {
 // ------------------------------------------
 //  FETCH DATA
 // ------------------------------------------
-
-for (let i=0; i<12; i++) {
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            const Img = data.results[0].picture.large;
-            const FirstName = data.results[0].name.first;
-            const LastName = data.results[0].name.last;
-            const userEmail = data.results[0].email;
-            const city = data.results[0].location.city
-            const state = data.results[0].location.state
-            const userPhone = data.results[0].phone;
-            const userAddrNum = data.results[0].location.street.number;
-            const userAddrStreet = data.results[0].location.street.name;
-            const dateObj = new Date(data.results[0].dob.date);
-            const month = dateObj.getUTCMonth() + 1;
-            const day = dateObj.getUTCDate();
-            const year = dateObj.getUTCFullYear();
-            const bDay = console.log(`${month}/${day}/${year}`);
-
-            generateCardHTML(Img, FirstName, LastName, userEmail, city, state);
-        });
+function fetchData(url) {
+  return fetch(url)
+           .then(checkStatus)  
+           .then(res => res.json())
+           .catch(error => console.log('Looks like there was a problem!', error))
 }
+
+Promise.all([
+  fetchData(url)
+])
+  .then(data => {
+    console.log(data)
+    const img = data.results[0].picture.large;
+    const FirstName = data.results[0].name.first;
+    const LastName = data.results[0].name.last;
+    const userEmail = data.results[0].email;
+    const city = data.results[0].location.city
+    const state = data.results[0].location.state
+    const userPhone = data.results[0].phone;
+    const userAddrNum = data.results[0].location.street.number;
+    const userAddrStreet = data.results[0].location.street.name;
+    const dateObj = new Date(data.results[0].dob.date);
+    const month = dateObj.getUTCMonth() + 1;
+    const day = dateObj.getUTCDate();
+    const year = dateObj.getUTCFullYear();
+    const bDay = console.log(`${month}/${day}/${year}`);
+
+    generateCardHTML(img, FirstName, LastName, userEmail, city, state);
+  });
+
+  function checkStatus(response) {
+    if (response.ok) {
+      return Promise.resolve(response);
+    } else {
+      return Promise.reject(new Error(response.statusText));
+    }
+  }
 
 // ------------------------------------------
 //  MODAL
