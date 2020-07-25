@@ -68,11 +68,9 @@ function fetchData(url) {
            .catch(error => console.log('Looks like there was a problem!', error))
 }
 
-Promise.all([
-  fetchData(url)
-])
+fetchData(url)
   .then(data => {
-    console.log(data)
+    
     const img = data.results[0].picture.large;
     const FirstName = data.results[0].name.first;
     const LastName = data.results[0].name.last;
@@ -89,6 +87,7 @@ Promise.all([
     const bDay = console.log(`${month}/${day}/${year}`);
 
     generateCardHTML(img, FirstName, LastName, userEmail, city, state);
+  
   });
 
   function checkStatus(response) {
