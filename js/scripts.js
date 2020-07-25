@@ -32,12 +32,38 @@ form.appendChild(searchSubmit);
 searchBar.appendChild(form);
 
 // ------------------------------------------
+//  GALLERY
+// ------------------------------------------
+
+//create function that will generate user cards:
+const generateCardHTML = (img, firstName, lastName, email, city, state) => {
+  const card = document.createElement('div');
+  const imgContainer = document.createElement('div');
+  const infoContainer = document.createElement('div');
+
+  card.classList.add('card');
+  imgContainer.classList.add('card-img-container');
+  infoContainer.classList.add('card-info-container'); 
+
+  gallery.appendChild(card);
+  card.appendChild(imgContainer);
+  card.appendChild(infoContainer);
+  imgContainer.innerHTML = `
+      <img class='card-img' src=${img} alt='profile picture'>
+  `;
+  infoContainer.innerHTML = `
+      <h3 id="name" class="card-name cap">${firstName} ${lastName}</h3>
+      <p class="card-text">${email}</p>
+      <p class="card-text cap">${city}, ${state}</p>
+  `;
+}
+
+// ------------------------------------------
 //  FETCH DATA
 // ------------------------------------------
 
 for (let i=0; i<12; i++) {
     fetch(url)
-      
         .then(response => response.json())
         .then(data => {
             const Img = data.results[0].picture.large;
@@ -59,34 +85,6 @@ for (let i=0; i<12; i++) {
         });
 }
 
-
-// ------------------------------------------
-//  GALLERY
-// ------------------------------------------
-
-//create function that will generate user cards:
-const generateCardHTML = (img, firstName, lastName, email, city, state) => {
-    const card = document.createElement('div');
-    const imgContainer = document.createElement('div');
-    const infoContainer = document.createElement('div');
-
-    card.classList.add('card');
-    imgContainer.classList.add('card-img-container');
-    infoContainer.classList.add('card-info-container'); 
-
-    gallery.appendChild(card);
-    card.appendChild(imgContainer);
-    card.appendChild(infoContainer);
-    imgContainer.innerHTML = `
-        <img class='card-img' src=${img} alt='profile picture'>
-    `;
-    infoContainer.innerHTML = `
-        <h3 id="name" class="card-name cap">${firstName} ${lastName}</h3>
-        <p class="card-text">${email}</p>
-        <p class="card-text cap">${city}, ${state}</p>
-    `;
-}
-
 // ------------------------------------------
 //  MODAL
 // ------------------------------------------
@@ -98,7 +96,8 @@ body.appendChild(modalContainer)
 modalContainer.style.display = 'none'
 
 const card = document.querySelector('.card')
-card.addEventListener('click', e => {
+
+card.addEventListener('click', () => {
     console.log('poop')
    // modalContainer.style.display = '';
   
