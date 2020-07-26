@@ -35,6 +35,14 @@ searchBar.appendChild(form);
 // ------------------------------------------
 //  FETCH DATA
 // ------------------------------------------
+function checkStatus(response) {
+  if (response.ok) {
+    return Promise.resolve(response);
+  } else {
+    return Promise.reject(new Error(response.statusText));
+  }
+}
+
 function fetchData(url) {
   return fetch(url)
            .then(checkStatus)  
@@ -44,43 +52,38 @@ function fetchData(url) {
 
 fetchData(url)
   .then(data => {
-    console.log(data.results[0])
-    for (let i = 0; i < data.length; i++) {
-      console.log(data.results[i])
-    const img = console.log(data.results[i].picture.large);
-    const FirstName = data.results[i].name.first;
-    const LastName = data.results[i].name.last;
-    const userEmail = data.results[i].email;
-    const city = data.results[i].location.city
-    const state = data.results[i].location.state
-    const userPhone = data.results[i].phone;
-    const userAddrNum = data.results[i].location.street.number;
-    const userAddrStreet = data.results[i].location.street.name;
-    const dateObj = new Date(data.results[i].dob.date);
+    console.log(data.results)
+    const img = data.results[0].picture.large;
+    const FirstName = data.results[0].name.first;
+    const LastName = data.results[0].name.last;
+    const userEmail = data.results[0].email;
+    const city = data.results[0].location.city
+    const state = data.results[0].location.state
+    const userPhone = data.results[0].phone;
+    const userAddrNum = data.results[0].location.street.number;
+    const userAddrStreet = data.results[0].location.street.name;
+    const dateObj = new Date(data.results[0].dob.date);
     const month = dateObj.getUTCMonth() + 1;
     const day = dateObj.getUTCDate();
     const year = dateObj.getUTCFullYear();
     const bDay = console.log(`${month}/${day}/${year}`);
 
     
-    generateCardHTML(img, FirstName, LastName, userEmail, city, state);
-  }
+    generateCardHTML(img, FirstName, LastName, userEmail, city, state, function(card) {
+      card.addEventListener('click', e => {
+        console.log('card')
+      });
+    });
   });
 
-  function checkStatus(response) {
-    if (response.ok) {
-      return Promise.resolve(response);
-    } else {
-      return Promise.reject(new Error(response.statusText));
-    }
-  }
+
 
 // ------------------------------------------
 //  GALLERY
 // ------------------------------------------
 
 //create function that will generate user cards:
-const generateCardHTML = (img, firstName, lastName, email, city, state) => {
+const generateCardHTML = (img, firstName, lastName, email, city, state, callback) => {
   const card = document.createElement('div');
   const imgContainer = document.createElement('div');
   const infoContainer = document.createElement('div');
@@ -100,6 +103,8 @@ const generateCardHTML = (img, firstName, lastName, email, city, state) => {
       <p class="card-text">${email}</p>
       <p class="card-text cap">${city}, ${state}</p>
   `;
+
+  callback(card)
 }
 
 // ------------------------------------------
