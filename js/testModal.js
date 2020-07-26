@@ -81,7 +81,7 @@ fetchData(url)
 // ------------------------------------------
 
 //create function that will generate LITERALLY EVERYTHING THIS CANNOT BE GOOD:
-const generateCardHTML = (img, firstName, lastName, email, city, state, phone, addrNum, addrStreet, zip, birthday) => {
+const generateCardHTML = (img, firstName, lastName, email, city, state, zip, phone, addrNum, addrStreet, birthday) => {
 
   const card = document.createElement('div');
   const imgContainer = document.createElement('div');
@@ -103,10 +103,12 @@ const generateCardHTML = (img, firstName, lastName, email, city, state, phone, a
       <p class="card-text cap">${city}, ${state}</p>
   `;
   
-  card.addEventListener('click', e => {
-    modalContainer.style.display = '';
-   });
+  card.addEventListener('click', () => {
+    generateModalHTML(img, firstName, lastName, email, city, state, zip, phone, addrNum, addrStreet, birthday)
+  });
+}
 
+const generateModalHTML = (img, firstName, lastName, email, city, state, phone, addrNum, addrStreet, zip, birthday) => {
   const modalContainer = document.createElement('div');
   const modal = document.createElement('div')
   const modalBtn = document.createElement('button')
@@ -122,15 +124,8 @@ const generateCardHTML = (img, firstName, lastName, email, city, state, phone, a
   modalBtn.classList.add('modal-close-btn');
   modalBtn.innerHTML = '<strong>X</strong>';
   modalBtnContainer.classList.add('modal-btn-container');
-  // modalPrev.type = 'button';
-  // modalNext.type = 'button';
-  // modalPrev.id = 'modal-prev';
-  // modalNext.id = 'modal-next';
-  // modalPrev.classList.add('modal-prev')
-  // modalNext.classList.add('modal-next')
 
-  // hide the container upon load:
-  modalContainer.style.display = 'none';
+  //modalContainer.style.display = '';
 
   // innerHTML of the modal elements:
   modalPrev.innerHTML = 'Prev'
@@ -149,10 +144,10 @@ const generateCardHTML = (img, firstName, lastName, email, city, state, phone, a
 
   modalPrev.innerHTML = `
     <button type='button' id='modal-prev' class='modal-prev btn'>Prev</button>
-  `
+  `;
   modalNext.innerHTML = `
     <button type='button' id='modal-next' class='modal-next btn'>Next</button>
-  `
+  `;
 
   // append modal:
   body.appendChild(modalContainer);
@@ -164,27 +159,15 @@ const generateCardHTML = (img, firstName, lastName, email, city, state, phone, a
   modalBtnContainer.appendChild(modalNext);
 
   // When the user clicks anywhere outside of the modal, close it
-  window.addEventListener('click', () => {
+  window.addEventListener('click', (event) => {
     if (event.target === modalContainer) {
       modalContainer.style.display = 'none';
     };
   });
+
   // When the user clicks on <button> (x), close the modal
-  document.getElementById('modal-close-btn').addEventListener('click', () => {
+  document.querySelector('.modal-close-btn').addEventListener('click', () => {
       modalContainer.style.display = 'none';
-  })
-}
-
-// reference to gallery cards for once they are created:
-//const card = document.querySelector('.card');
-
-// ------------------------------------------
-//  MODAL
-// ------------------------------------------
-
-//const generateModalHTML = (img, firstName, lastName, email, city, state, street, phone, birthday) => {
-
-// create all modal elements:
-
-//}
+  });
+};
 
