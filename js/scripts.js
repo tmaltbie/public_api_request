@@ -1,9 +1,8 @@
 const body = document.querySelector('body')
 const searchBar = document.querySelector('.search-container');
 const gallery = document.getElementById('gallery');
-// const url = 'https://randomuser.me/api/?results=12'
-const url = 'https://fsjs-public-api-backup.herokuapp.com/api/'
-
+const url = 'https://randomuser.me/api/?results=12'
+// const url = 'https://fsjs-public-api-backup.herokuapp.com/api/'
 
 // ------------------------------------------
 //  SEARCH
@@ -30,6 +29,51 @@ form.appendChild(searchInput);
 form.appendChild(searchSubmit);
 //append form to searchBar 
 searchBar.appendChild(form);
+
+
+
+// ------------------------------------------
+//  FETCH DATA
+// ------------------------------------------
+function fetchData(url) {
+  return fetch(url)
+           .then(checkStatus)  
+           .then(res => res.json())
+           .catch(error => console.log('Looks like there was a problem!', error))
+}
+
+fetchData(url)
+  .then(data => {
+    console.log(data.results[0])
+    for (let i = 0; i < data.length; i++) {
+      console.log(data.results[i])
+    const img = console.log(data.results[i].picture.large);
+    const FirstName = data.results[i].name.first;
+    const LastName = data.results[i].name.last;
+    const userEmail = data.results[i].email;
+    const city = data.results[i].location.city
+    const state = data.results[i].location.state
+    const userPhone = data.results[i].phone;
+    const userAddrNum = data.results[i].location.street.number;
+    const userAddrStreet = data.results[i].location.street.name;
+    const dateObj = new Date(data.results[i].dob.date);
+    const month = dateObj.getUTCMonth() + 1;
+    const day = dateObj.getUTCDate();
+    const year = dateObj.getUTCFullYear();
+    const bDay = console.log(`${month}/${day}/${year}`);
+
+    
+    generateCardHTML(img, FirstName, LastName, userEmail, city, state);
+  }
+  });
+
+  function checkStatus(response) {
+    if (response.ok) {
+      return Promise.resolve(response);
+    } else {
+      return Promise.reject(new Error(response.statusText));
+    }
+  }
 
 // ------------------------------------------
 //  GALLERY
@@ -59,60 +103,20 @@ const generateCardHTML = (img, firstName, lastName, email, city, state) => {
 }
 
 // ------------------------------------------
-//  FETCH DATA
-// ------------------------------------------
-function fetchData(url) {
-  return fetch(url)
-           .then(checkStatus)  
-           .then(res => res.json())
-           .catch(error => console.log('Looks like there was a problem!', error))
-}
-
-fetchData(url)
-  .then(data => {
-    
-    const img = data.results[0].picture.large;
-    const FirstName = data.results[0].name.first;
-    const LastName = data.results[0].name.last;
-    const userEmail = data.results[0].email;
-    const city = data.results[0].location.city
-    const state = data.results[0].location.state
-    const userPhone = data.results[0].phone;
-    const userAddrNum = data.results[0].location.street.number;
-    const userAddrStreet = data.results[0].location.street.name;
-    const dateObj = new Date(data.results[0].dob.date);
-    const month = dateObj.getUTCMonth() + 1;
-    const day = dateObj.getUTCDate();
-    const year = dateObj.getUTCFullYear();
-    const bDay = console.log(`${month}/${day}/${year}`);
-
-    generateCardHTML(img, FirstName, LastName, userEmail, city, state);
-  
-  });
-
-  function checkStatus(response) {
-    if (response.ok) {
-      return Promise.resolve(response);
-    } else {
-      return Promise.reject(new Error(response.statusText));
-    }
-  }
-
-// ------------------------------------------
 //  MODAL
 // ------------------------------------------
 
 // create modal:
-const modalContainer = document.createElement('div');
-modalContainer.classList.add('modal-container');
-body.appendChild(modalContainer)
-modalContainer.style.display = 'none'
+// const modalContainer = document.createElement('div');
+// modalContainer.classList.add('modal-container');
+// body.appendChild(modalContainer)
+// modalContainer.style.display = 'none'
 
-const card = document.querySelector('.card')
+// const card = document.querySelector('.card')
 
-card.addEventListener('click', () => {
-    console.log('poop')
-   // modalContainer.style.display = '';
+// card.addEventListener('click', () => {
+//     console.log('poop')
+//    // modalContainer.style.display = '';
   
-})
+// })
 
