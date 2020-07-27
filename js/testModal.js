@@ -32,6 +32,7 @@ searchBar.appendChild(form);
 
 
 
+
 // ------------------------------------------
 //  FETCH DATA
 // ------------------------------------------
@@ -69,20 +70,25 @@ fetchData(url)
       const year = dateObj.getUTCFullYear();
       const bDay = `${month}/${day}/${year}`;
       
-      generateCardHTML(img, firstName, lastName, email, city, state, phone, addrNum, addrStreet, zip, bDay)        
+      generateCardHTML(img, firstName, lastName, email, city, state, phone, addrNum, addrStreet, zip, bDay, function(){
+        
+        //this is not going to work x_x
+        window.addEventListener('click', (e) => {
+          if (e.target.tagName === 'BUTTON' && e.target.innerText === 'NEXT') {
+            console.log('this is the next user:', data.results[i+1])
+          }
+        })
+      })        
     }
   })
   .catch(error => console.log('Looks like there was a problem!', error))
-
-
 
 // ------------------------------------------
 //  GALLERY
 // ------------------------------------------
 
-//create function that will generate LITERALLY EVERYTHING THIS CANNOT BE GOOD:
-const generateCardHTML = (img, firstName, lastName, email, city, state, zip, phone, addrNum, addrStreet, birthday) => {
 
+const generateCardHTML = (img, firstName, lastName, email, city, state, zip, phone, addrNum, addrStreet, birthday, callback) => {
   const card = document.createElement('div');
   const imgContainer = document.createElement('div');
   const infoContainer = document.createElement('div');
@@ -103,12 +109,14 @@ const generateCardHTML = (img, firstName, lastName, email, city, state, zip, pho
       <p class="card-text cap">${city}, ${state}</p>
   `;
   
-  card.addEventListener('click', () => {
-    generateModalHTML(img, firstName, lastName, email, city, state, zip, phone, addrNum, addrStreet, birthday)
+  card.addEventListener('click', (e) => {
+    //call generateModalHTML function to generate modal for clicked user
+    generateModalHTML(img, firstName, lastName, email, city, state, zip, phone, addrNum, addrStreet, birthday, callback)
   });
 }
 
-const generateModalHTML = (img, firstName, lastName, email, city, state, phone, addrNum, addrStreet, zip, birthday) => {
+const generateModalHTML = (img, firstName, lastName, email, city, state, phone, addrNum, addrStreet, zip, birthday, callback) => {
+  
   const modalContainer = document.createElement('div');
   const modal = document.createElement('div')
   const modalBtn = document.createElement('button')
@@ -125,12 +133,6 @@ const generateModalHTML = (img, firstName, lastName, email, city, state, phone, 
   modalBtn.innerHTML = '<strong>X</strong>';
   modalBtnContainer.classList.add('modal-btn-container');
 
-  //modalContainer.style.display = '';
-
-  // innerHTML of the modal elements:
-  modalPrev.innerHTML = 'Prev'
-  modalNext.innerHTML = 'Next'
-  
   modalInfoContainer.innerHTML = `
     <img class='modal-img' src='${img}' alt='profile picture'>
     <h3 id='name' class='modal-name cap'> ${firstName} ${lastName} </h3>
@@ -161,13 +163,23 @@ const generateModalHTML = (img, firstName, lastName, email, city, state, phone, 
   // When the user clicks anywhere outside of the modal, close it
   window.addEventListener('click', (event) => {
     if (event.target === modalContainer) {
-      modalContainer.style.display = 'none';
+      document.body.removeChild(modalContainer);
     };
   });
 
   // When the user clicks on <button> (x), close the modal
   document.querySelector('.modal-close-btn').addEventListener('click', () => {
-      modalContainer.style.display = 'none';
+      document.body.removeChild(modalContainer);
+  });
+
+  modalPrev.addEventListener('click', (e) => {
+    console.log('click prev is functional', e.target.tagName, e.target.innerText);
+    callback(modalPrev)
+  });
+
+  modalNext.addEventListener('click', () => {
+    console.log('click next is functional');
+    callback(modalNext)
   });
 };
 
