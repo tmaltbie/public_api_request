@@ -30,9 +30,6 @@ form.appendChild(searchSubmit);
 //append form to searchBar 
 searchBar.appendChild(form);
 
-
-
-
 // ------------------------------------------
 //  FETCH DATA
 // ------------------------------------------
@@ -51,11 +48,31 @@ function fetchData(url) {
 }
 
 fetchData(url)
-  .then(data => generateCardHTML(data.results))
+  .then(data => {
+    
+      generateCardHTML(data.results)
+    
+  })
   .catch(error => console.log('Looks like there was a problem!', error))
  
 const generateCardHTML= (users) => {
-  users.map(user => console.log(user[1].name.first))
+  for (let i=0; i<users.length; i++) {
+  users.map(user => 
+  
+  gallery.innerHTML = `
+    <div class='card'>
+      <div class='card-img-container'>
+        <img class='card-img' src=${user.picture.large} alt='profile picture'>
+      </div>
+      <div class='card-info-container'>
+        <h3 id='name' class='card-name cap'>${user.name.first} ${user.name.last}</h3>
+        <p class='card-text'>${user.email}</p>
+        <p class='card-text cap'>${user.location.city}, ${user.location.state}</p>
+      </div>
+    </div>
+  `)
+  }
+  
 }
 // const generateCardHTML = (img, firstName, lastName, email, city, state, zip, phone, addrNum, addrStreet, birthday, callback) => {
 //   const card = document.createElement('div');

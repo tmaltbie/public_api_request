@@ -89,6 +89,21 @@ fetchData(url)
 
 
 const generateCardHTML = (img, firstName, lastName, email, city, state, zip, phone, addrNum, addrStreet, birthday, callback) => {
+
+  
+  // gallery.innerHTML = `
+  //   <div class='card'>
+  //     <div class='card-img-container'>
+  //       <img class='card-img' src=${img} alt='profile picture'>
+  //     </div>
+  //     <div class='card-info-container'>
+  //       <h3 id='name' class='card-name cap'>${firstName} ${lastName}</h3>
+  //       <p class='card-text'>${email}</p>
+  //       <p class='card-text cap'>${city}, ${state}</p>
+  //     </div>
+  //   </div>
+  // `
+
   const card = document.createElement('div');
   const imgContainer = document.createElement('div');
   const infoContainer = document.createElement('div');
