@@ -3,7 +3,7 @@ const searchBar = document.querySelector('.search-container');
 const gallery = document.getElementById('gallery');
 // const url = 'https://randomuser.me/api/?results=12?nat=us'
 const url = 'https://fsjs-public-api-backup.herokuapp.com/api/'
-
+const employees = [];
 // ------------------------------------------
 //  SEARCH
 // ------------------------------------------
@@ -49,15 +49,14 @@ function fetchData(url) {
 
 fetchData(url)
   .then(data => {
-    
       generateCardHTML(data.results)
-    
   })
   .catch(error => console.log('Looks like there was a problem!', error))
  
-const generateCardHTML= (users) => {
-  for (let i=0; i<users.length; i++) {
-  users.map(user => 
+const generateCardHTML = (users) => {
+  
+  users.map(user =>
+  
   
   gallery.innerHTML = `
     <div class='card'>
@@ -71,8 +70,6 @@ const generateCardHTML= (users) => {
       </div>
     </div>
   `)
-  }
-  
 }
 // const generateCardHTML = (img, firstName, lastName, email, city, state, zip, phone, addrNum, addrStreet, birthday, callback) => {
 //   const card = document.createElement('div');
