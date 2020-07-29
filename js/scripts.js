@@ -4,6 +4,7 @@ const gallery = document.getElementById('gallery');
 // const url = 'https://randomuser.me/api/?results=12?nat=us'
 const url = 'https://fsjs-public-api-backup.herokuapp.com/api/'
 let usersArray = []
+let userIndex;
 
 // ------------------------------------------
 //  SEARCH
@@ -47,7 +48,11 @@ function fetchData(url) {
 }
 
 fetchData(url)
-  .then(data => generateCardHTML(data.results))
+  .then(data => {
+    data.results.forEach(user => usersArray.push(user))
+    generateCardHTML(data.results)
+    
+  })
   .catch(error => console.log('Looks like there was a problem!', error))
 
   // generate User Card 
@@ -57,7 +62,13 @@ const generateCardHTML = (users) => {
     const card = document.createElement('div');
     const imgContainer = document.createElement('div');
     const infoContainer = document.createElement('div');
-    
+
+
+    // maybe can use this for search and modal buttons functionality??
+    userIndex = i
+    card.id = userIndex
+
+
     card.classList.add('card');
     imgContainer.classList.add('card-img-container');
     infoContainer.classList.add('card-info-container'); 
@@ -86,6 +97,7 @@ const generateModalHTML = (user) => {
   const modalBtnContainer = document.createElement('div')
   const prev = document.createElement('button')
   const next = document.createElement('button')
+  
   //reformat birthday
   const dateObj = new Date(user.dob.date);
     const month = dateObj.getUTCMonth() + 1;
@@ -139,16 +151,20 @@ const generateModalHTML = (user) => {
       document.body.removeChild(modalContainer);
   });
 
-  prevModal()
+  prevModal(prev, modalContainer)
+  nextModal(next)
 };
 
-const prevModal = (previous) => {
+const prevModal = (previous, modal) => {
   previous.addEventListener('click', () => {
-    console.log('click PREV is functional');
+    if (true) {}
+    document.body.removeChild(modal);
   });
 }
 
 const nextModal = (next) => {
   next.addEventListener('click', () => {
+
+    console.log('click NEXT is functional');
   });
 } 
