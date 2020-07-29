@@ -3,8 +3,6 @@ const searchBar = document.querySelector('.search-container');
 const gallery = document.getElementById('gallery');
 // const url = 'https://randomuser.me/api/?results=12?nat=us'
 const url = 'https://fsjs-public-api-backup.herokuapp.com/api/'
-let usersArray = []
-let userIndex;
 
 // ------------------------------------------
 //  SEARCH
@@ -63,12 +61,6 @@ const generateCardHTML = (users) => {
     const card = document.createElement('div');
     const imgContainer = document.createElement('div');
     const infoContainer = document.createElement('div');
-
-
-    // maybe can use this for search and modal buttons functionality??
-    userIndex = i
-    card.id = userIndex
-
 
     card.classList.add('card');
     imgContainer.classList.add('card-img-container');
@@ -154,36 +146,30 @@ const generateModalHTML = (users, index) => {
   });
 
   prevModal(prev, modalContainer, users, index)
-  nextModal(next)
-
-  // prev.addEventListener('click', () => {
-  //   document.body.removeChild(modalContainer);
-
-  // })
+  nextModal(next, modalContainer, users, index)
 };
 
 const prevModal = (previous, modal, users, index) => {
   previous.addEventListener('click', () => {
-    console.log('PREV is functional');
-
-    const currentIndex = users.indexOf(users[index])
-
-    console.log(users[currentIndex-1])
-
-    const previousUser = users[currentIndex-1]
-
-    console.log(previousUser.indexOf(previousUser))
-
+    const user = users[index]
+    let currIndex = users.indexOf(users[index])
+    let prevUser = currIndex-1
+    if (currIndex === 0) {
+      prevUser = currIndex + (users.length-1)
+    }
     document.body.removeChild(modal);
-    
-    // generateModalHTML(previousUser, )
-
+    generateModalHTML(users, prevUser)
   });
 }
 
-const nextModal = (next) => {
+const nextModal = (next, modal, users, index) => {
   next.addEventListener('click', () => {
-
-    console.log('NEXT is functional');
+    let currIndex = users.indexOf(users[index])
+    let nextUser = currIndex+1
+     if (currIndex === users.length-1) {
+       nextUser = currIndex - currIndex
+     }
+    document.body.removeChild(modal);
+    generateModalHTML(users, nextUser)
   });
 } 
