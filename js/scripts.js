@@ -3,6 +3,7 @@ const searchBar = document.querySelector('.search-container');
 const gallery = document.getElementById('gallery');
 // const url = 'https://randomuser.me/api/?results=12?nat=us'
 const url = 'https://fsjs-public-api-backup.herokuapp.com/api/'
+let usersArray = []
 
 // ------------------------------------------
 //  SEARCH
@@ -10,22 +11,22 @@ const url = 'https://fsjs-public-api-backup.herokuapp.com/api/'
 const form = document.createElement('form');
 form.action = '#';
 form.method = "GET";
-//create input, type="search" id="search-input" class="search-input" placeholder="Search..."
+
 const searchInput = document.createElement('input');
 searchInput.type = 'search';
 searchInput.id = 'search-input';
 searchInput.classList.add('search-input');
 searchInput.placeholder = 'Search...';
-//create input2, type="submit", value="&#x1F50D;" id="search-submit" class="search-submit"
+
 const searchSubmit = document.createElement('input');
 searchSubmit.type = 'submit';
 searchSubmit.value;
 searchSubmit.id = 'search-input';
 searchInput.classList.add('search-submit');
-//append inputs to form
+
 form.appendChild(searchInput);
 form.appendChild(searchSubmit);
-//append form to searchBar 
+
 searchBar.appendChild(form);
 
 // ------------------------------------------
@@ -46,75 +47,51 @@ function fetchData(url) {
 }
 
 fetchData(url)
-  .then(data => {
-    const arr = data.results
-    for (let i=0; i<arr.length; i++) {
-      const img = data.results[i].picture.large;
-      const firstName = data.results[i].name.first;
-      const lastName = data.results[i].name.last;
-      const email = data.results[i].email;
-      const city = data.results[i].location.city
-      const state = data.results[i].location.state
-      const phone = data.results[i].phone;
-      const addrNum = data.results[i].location.street.number;
-      const addrStreet = data.results[i].location.street.name;
-      const zip = data.results[i].location.postcode;
-      const dateObj = new Date(data.results[i].dob.date);
-      const month = dateObj.getUTCMonth() + 1;
-      const day = dateObj.getUTCDate();
-      const year = dateObj.getUTCFullYear();
-      const bDay = `${month}/${day}/${year}`;
-      
-      generateCardHTML(img, firstName, lastName, email, city, state, phone, addrNum, addrStreet, zip, bDay, function(){
-        
-        //this is not going to work x_x
-        window.addEventListener('click', (e) => {
-          if (e.target.tagName === 'BUTTON' && e.target.innerText === 'NEXT') {
-           
-          }
-        })
-      })        
-    }
-  })
+  .then(data => generateCardHTML(data.results))
   .catch(error => console.log('Looks like there was a problem!', error))
 
+  // generate User Card 
+const generateCardHTML = (users) => {
+  for (let i=0; i<users.length; i++) {
+    const user = users[i]
+    const card = document.createElement('div');
+    const imgContainer = document.createElement('div');
+    const infoContainer = document.createElement('div');
+    
+    card.classList.add('card');
+    imgContainer.classList.add('card-img-container');
+    infoContainer.classList.add('card-info-container'); 
+    gallery.appendChild(card);
+    card.appendChild(imgContainer);
+    card.appendChild(infoContainer);
+    imgContainer.innerHTML = `
+        <img class='card-img' src=${user.picture.large} alt='profile picture'>
+    `;
+    infoContainer.innerHTML = `
+        <h3 id="name" class="card-name cap">${user.name.first} ${user.name.last}</h3>
+        <p class="card-text">${user.email}</p>
+        <p class="card-text cap">${user.location.city}, ${user.location.state}</p>
+    `;
+    card.addEventListener('click', () => {
+      generateModalHTML(user)
+    });
+  };
+};
 
-const generateCardHTML = (img, firstName, lastName, email, city, state, zip, phone, addrNum, addrStreet, birthday) => {
-  const card = document.createElement('div');
-  const imgContainer = document.createElement('div');
-  const infoContainer = document.createElement('div');
-  card.classList.add('card');
-  imgContainer.classList.add('card-img-container');
-  infoContainer.classList.add('card-info-container'); 
-
-  gallery.appendChild(card);
-  card.appendChild(imgContainer);
-  card.appendChild(infoContainer);
-  imgContainer.innerHTML = `
-      <img class='card-img' src=${img} alt='profile picture'>
-  `;
-  infoContainer.innerHTML = `
-      <h3 id="name" class="card-name cap">${firstName} ${lastName}</h3>
-      <p class="card-text">${email}</p>
-      <p class="card-text cap">${city}, ${state}</p>
-  `;
-  
-  card.addEventListener('click', () => {
-    //generate modal for clicked user
-    generateModalHTML(img, firstName, lastName, email, city, state, zip, phone, addrNum, addrStreet, birthday )
-  });
-}
-
-const generateModalHTML = (img, firstName, lastName, email, city, state, phone, addrNum, addrStreet, zip, birthday) => {
-  
+const generateModalHTML = (user) => {
   const modalContainer = document.createElement('div');
   const modal = document.createElement('div')
   const modalBtn = document.createElement('button')
   const modalInfoContainer = document.createElement('div')
   const modalBtnContainer = document.createElement('div')
-  const modalPrev = document.createElement('button')
-  const modalNext = document.createElement('button')
-
+  const prev = document.createElement('button')
+  const next = document.createElement('button')
+  //reformat birthday
+  const dateObj = new Date(user.dob.date);
+    const month = dateObj.getUTCMonth() + 1;
+    const day = dateObj.getUTCDate();
+    const year = dateObj.getUTCFullYear();
+    const bDay = `${month}/${day}/${year}`;
   // style, classes, display:
   modalContainer.classList.add('modal-container');
   modal.classList.add('modal');
@@ -124,20 +101,20 @@ const generateModalHTML = (img, firstName, lastName, email, city, state, phone, 
   modalBtnContainer.classList.add('modal-btn-container');
 
   modalInfoContainer.innerHTML = `
-    <img class='modal-img' src='${img}' alt='profile picture'>
-    <h3 id='name' class='modal-name cap'> ${firstName} ${lastName} </h3>
-    <p class='modal-text'> ${email} </p>
-    <p class='modal-text cap'> ${city} </p>
+    <img class='modal-img' src='${user.picture.large}' alt='profile picture'>
+    <h3 id='name' class='modal-name cap'> ${user.name.first} ${user.name.last} </h3>
+    <p class='modal-text'> ${user.email} </p>
+    <p class='modal-text cap'> ${user.location.city} </p>
     <hr>
-    <p class='modal-text'> ${phone} </p>
-    <p class='modal-text'> ${addrNum} ${addrStreet}, ${city}, ${state} ${zip} </p>
-    <p class='modal-text'> Birthday: ${birthday} </p>
+    <p class='modal-text'> ${user.phone} </p>
+    <p class='modal-text'> ${user.location.street.number} ${user.location.street.name}, ${user.location.city}, ${user.location.state} ${user.location.postcode} </p>
+    <p class='modal-text'> Birthday: ${bDay} </p>
   `;
 
-  modalPrev.innerHTML = `
+  prev.innerHTML = `
     <button type='button' id='modal-prev' class='modal-prev btn'>Prev</button>
   `;
-  modalNext.innerHTML = `
+  next.innerHTML = `
     <button type='button' id='modal-next' class='modal-next btn'>Next</button>
   `;
 
@@ -147,8 +124,8 @@ const generateModalHTML = (img, firstName, lastName, email, city, state, phone, 
   modal.appendChild(modalBtn);
   modal.appendChild(modalInfoContainer);
   modal.appendChild(modalBtnContainer);
-  modalBtnContainer.appendChild(modalPrev);
-  modalBtnContainer.appendChild(modalNext);
+  modalBtnContainer.appendChild(prev);
+  modalBtnContainer.appendChild(next);
 
   // When the user clicks anywhere outside of the modal, close it
   window.addEventListener('click', (event) => {
@@ -162,12 +139,16 @@ const generateModalHTML = (img, firstName, lastName, email, city, state, phone, 
       document.body.removeChild(modalContainer);
   });
 
-  modalPrev.addEventListener('click', (e) => {
-    console.log('click prev is functional');  
-  });
-
-  modalNext.addEventListener('click', () => {
-    console.log('click next is functional'); 
-  });
+  prevModal()
 };
 
+const prevModal = (previous) => {
+  previous.addEventListener('click', () => {
+    console.log('click PREV is functional');
+  });
+}
+
+const nextModal = (next) => {
+  next.addEventListener('click', () => {
+  });
+} 

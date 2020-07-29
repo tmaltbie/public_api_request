@@ -54,10 +54,7 @@ fetchData(url)
   .catch(error => console.log('Looks like there was a problem!', error))
  
 const generateCardHTML = (users) => {
-  
-  users.map(user => {
-  
-  for (let i=0; i<users.length; i++) {
+  users.map(user => 
   gallery.innerHTML = `
     <div class='card'>
       <div class='card-img-container'>
@@ -69,8 +66,8 @@ const generateCardHTML = (users) => {
         <p class='card-text cap'>${user.location.city}, ${user.location.state}</p>
       </div>
     </div>
-  `}
-})
+  `
+  )
 }
 // const generateCardHTML = (img, firstName, lastName, email, city, state, zip, phone, addrNum, addrStreet, birthday, callback) => {
 //   const card = document.createElement('div');
