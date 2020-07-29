@@ -55,6 +55,7 @@ fetchData(url)
   })
   .catch(error => console.log('Looks like there was a problem!', error))
 
+
   // generate User Card 
 const generateCardHTML = (users) => {
   for (let i=0; i<users.length; i++) {
@@ -84,12 +85,13 @@ const generateCardHTML = (users) => {
         <p class="card-text cap">${user.location.city}, ${user.location.state}</p>
     `;
     card.addEventListener('click', () => {
-      generateModalHTML(user)
+      generateModalHTML(users, i)
     });
   };
 };
 
-const generateModalHTML = (user) => {
+const generateModalHTML = (users, index) => {
+  const user = users[index]
   const modalContainer = document.createElement('div');
   const modal = document.createElement('div')
   const modalBtn = document.createElement('button')
@@ -151,20 +153,37 @@ const generateModalHTML = (user) => {
       document.body.removeChild(modalContainer);
   });
 
-  prevModal(prev, modalContainer)
+  prevModal(prev, modalContainer, users, index)
   nextModal(next)
+
+  // prev.addEventListener('click', () => {
+  //   document.body.removeChild(modalContainer);
+
+  // })
 };
 
-const prevModal = (previous, modal) => {
+const prevModal = (previous, modal, users, index) => {
   previous.addEventListener('click', () => {
-    if (true) {}
+    console.log('PREV is functional');
+
+    const currentIndex = users.indexOf(users[index])
+
+    console.log(users[currentIndex-1])
+
+    const previousUser = users[currentIndex-1]
+
+    console.log(previousUser.indexOf(previousUser))
+
     document.body.removeChild(modal);
+    
+    // generateModalHTML(previousUser, )
+
   });
 }
 
 const nextModal = (next) => {
   next.addEventListener('click', () => {
 
-    console.log('click NEXT is functional');
+    console.log('NEXT is functional');
   });
 } 
