@@ -1,29 +1,34 @@
 const body = document.querySelector('body')
 const searchBar = document.querySelector('.search-container');
 const gallery = document.getElementById('gallery');
-const url = 'https://randomuser.me/api/?results=12?nat=us'
+const url = 'https://randomuser.me/api/?results=12&nat=US'
 // const url = 'https://fsjs-public-api-backup.herokuapp.com/api/'
 
 // ------------------------------------------
 //  FETCH DATA
 // ------------------------------------------
-function checkStatus(response) {
-  if (response.ok) {
-    return Promise.resolve(response);
-  } else {
-    return Promise.reject(new Error(response.statusText));
-  }
-}
+// function checkStatus(response) {
+//   if (response.ok) {
+//     return Promise.resolve(response);
+//   } else {
+//     return Promise.reject(new Error(response.statusText));
+//   }
+// }
 
-function fetchData(url) {
-  return fetch(url)
-           .then(checkStatus)  
-           .then(res => res.json())
-}
+// function fetchData(url) {
+//   return fetch(url)
+//            .then(checkStatus)  
+//            .then(res => res.json())
+// }
 
-fetchData(url)
+fetch(url)
+  .then(res => res.json())
   .then(data => generateCardHTML(data.results))
-  .catch(error => gallery.innerHTML('Looks like there was a problem!', error))
+  .catch(error => {
+      gallery.innerHTML = `<h2>Looks like there was a problem!</h2> <br> ${error}`
+      gallery.style.display = 'block'
+      gallery.style.color = 'crimson'
+    })
 
 // ------------------------------------------
 //  SEARCH BAR
