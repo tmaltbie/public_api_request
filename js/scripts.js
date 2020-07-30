@@ -1,8 +1,8 @@
 const body = document.querySelector('body')
 const searchBar = document.querySelector('.search-container');
 const gallery = document.getElementById('gallery');
-// const url = 'https://randomuser.me/api/?results=12?nat=us'
-const url = 'https://fsjs-public-api-backup.herokuapp.com/api/'
+const url = 'https://randomuser.me/api/?results=12?nat=us'
+// const url = 'https://fsjs-public-api-backup.herokuapp.com/api/'
 
 // ------------------------------------------
 //  FETCH DATA
@@ -23,7 +23,7 @@ function fetchData(url) {
 
 fetchData(url)
   .then(data => generateCardHTML(data.results))
-  .catch(error => console.log('Looks like there was a problem!', error))
+  .catch(error => gallery.innerHTML('Looks like there was a problem!', error))
 
 // ------------------------------------------
 //  SEARCH BAR
@@ -49,23 +49,11 @@ form.appendChild(searchSubmit);
 
 searchBar.appendChild(form);
 
-const renderSearch = (input, data) => {
-  const filter = input.value.trim().toLowerCase()
-  searchResults = []
-  
-  for (let i = 0; i < data.length; i++) {
-    user = data[i]
-    if (filter.length !== 0 && (user.name.first || user.name.last)) {
-      // searchResults.push(user)
-      
-    }
-  }
-}
-
 // ------------------------------------------
 //  GENERATE CARD HTML AND SO MUCH MORE
 // ------------------------------------------
 const generateCardHTML = (users) => {
+  
   for (let i=0; i<users.length; i++) {
     const user = users[i]
     const card = document.createElement('div');
@@ -90,9 +78,8 @@ const generateCardHTML = (users) => {
       generateModalHTML(users, i)
     });
   };
-  //const employeeInfo = document.querySelectorAll('.card')
-  directoryFilter(searchInput)
 
+  directoryFilter(searchInput)
 };
 
 const generateModalHTML = (users, index) => {
@@ -164,7 +151,6 @@ const generateModalHTML = (users, index) => {
 
 const prevModal = (previous, modal, users, index) => {
   previous.addEventListener('click', () => {
-    const user = users[index]
     let currIndex = users.indexOf(users[index])
     let prevUser = currIndex-1
     if (currIndex === 0) {
