@@ -5,7 +5,28 @@ const gallery = document.getElementById('gallery');
 const url = 'https://fsjs-public-api-backup.herokuapp.com/api/'
 
 // ------------------------------------------
-//  SEARCH
+//  FETCH DATA
+// ------------------------------------------
+function checkStatus(response) {
+  if (response.ok) {
+    return Promise.resolve(response);
+  } else {
+    return Promise.reject(new Error(response.statusText));
+  }
+}
+
+function fetchData(url) {
+  return fetch(url)
+           .then(checkStatus)  
+           .then(res => res.json())
+}
+
+fetchData(url)
+  .then(data => generateCardHTML(data.results))
+  .catch(error => console.log('Looks like there was a problem!', error))
+
+// ------------------------------------------
+//  SEARCH BAR
 // ------------------------------------------
 const form = document.createElement('form');
 form.action = '#';
@@ -28,33 +49,22 @@ form.appendChild(searchSubmit);
 
 searchBar.appendChild(form);
 
-// ------------------------------------------
-//  FETCH DATA
-// ------------------------------------------
-function checkStatus(response) {
-  if (response.ok) {
-    return Promise.resolve(response);
-  } else {
-    return Promise.reject(new Error(response.statusText));
+const renderSearch = (input, data) => {
+  const filter = input.value.trim().toLowerCase()
+  searchResults = []
+  
+  for (let i = 0; i < data.length; i++) {
+    user = data[i]
+    if (filter.length !== 0 && (user.name.first || user.name.last)) {
+      // searchResults.push(user)
+      
+    }
   }
 }
 
-function fetchData(url) {
-  return fetch(url)
-           .then(checkStatus)  
-           .then(res => res.json())
-}
-
-fetchData(url)
-  .then(data => {
-    data.results.forEach(user => usersArray.push(user))
-    generateCardHTML(data.results)
-    
-  })
-  .catch(error => console.log('Looks like there was a problem!', error))
-
-
-  // generate User Card 
+// ------------------------------------------
+//  GENERATE CARD HTML AND SO MUCH MORE
+// ------------------------------------------
 const generateCardHTML = (users) => {
   for (let i=0; i<users.length; i++) {
     const user = users[i]
@@ -80,6 +90,9 @@ const generateCardHTML = (users) => {
       generateModalHTML(users, i)
     });
   };
+  //const employeeInfo = document.querySelectorAll('.card')
+  directoryFilter(searchInput)
+
 };
 
 const generateModalHTML = (users, index) => {
@@ -173,3 +186,17 @@ const nextModal = (next, modal, users, index) => {
     generateModalHTML(users, nextUser)
   });
 } 
+
+const directoryFilter = (input) => {
+  const names = document.querySelectorAll('.card-name')
+  input.addEventListener('keyup', (e) => {
+    const searchString = e.target.value
+    for (let i=0; i<names.length; i++){
+      if (!(names[i].innerHTML.toLowerCase().includes(searchString.toLowerCase()))) {
+        names[i].parentElement.parentElement.style.display = 'none'
+      } else {
+        names[i].parentElement.parentElement.style.display = ''
+      }
+    }
+  })
+}
