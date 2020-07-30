@@ -1,26 +1,14 @@
 const body = document.querySelector('body')
-const searchBar = document.querySelector('.search-container');
+// const searchBar = document.querySelector('.search-container');
 const gallery = document.getElementById('gallery');
 const url = 'https://randomuser.me/api/?results=12&nat=US'
+// Backup API, if RandomUser.me is not working comment it out and uncomment this one:
 // const url = 'https://fsjs-public-api-backup.herokuapp.com/api/'
 
-// ------------------------------------------
-//  FETCH DATA
-// ------------------------------------------
-// function checkStatus(response) {
-//   if (response.ok) {
-//     return Promise.resolve(response);
-//   } else {
-//     return Promise.reject(new Error(response.statusText));
-//   }
-// }
-
-// function fetchData(url) {
-//   return fetch(url)
-//            .then(checkStatus)  
-//            .then(res => res.json())
-// }
-
+/**
+ * Fetch API information
+ * If there is an error, display error to HTML
+ */
 fetch(url)
   .then(res => res.json())
   .then(data => generateCardHTML(data.results))
@@ -30,47 +18,28 @@ fetch(url)
       gallery.style.color = 'crimson'
     })
 
-// ------------------------------------------
-//  SEARCH BAR
-// ------------------------------------------
-const form = document.createElement('form');
-form.action = '#';
-form.method = "GET";
-
-const searchInput = document.createElement('input');
-searchInput.type = 'search';
-searchInput.id = 'search-input';
-searchInput.classList.add('search-input');
-searchInput.placeholder = 'Search...';
-
-const searchSubmit = document.createElement('input');
-searchSubmit.type = 'submit';
-searchSubmit.value;
-searchSubmit.id = 'search-input';
-searchInput.classList.add('search-submit');
-
-form.appendChild(searchInput);
-form.appendChild(searchSubmit);
-
-searchBar.appendChild(form);
-
-// ------------------------------------------
-//  GENERATE CARD HTML AND SO MUCH MORE
-// ------------------------------------------
+/**
+ * @function generateUserInfo uses the data from the API to generate and display employee cards.
+ * search function is also added and allows user to filter results.
+ * @param {API response} users 
+ */
 const generateCardHTML = (users) => {
   
+  // loops over data
   for (let i=0; i<users.length; i++) {
+    // creates card elements
     const user = users[i]
     const card = document.createElement('div');
     const imgContainer = document.createElement('div');
     const infoContainer = document.createElement('div');
-
+    // classes and appending to DOM
     card.classList.add('card');
     imgContainer.classList.add('card-img-container');
     infoContainer.classList.add('card-info-container'); 
     gallery.appendChild(card);
     card.appendChild(imgContainer);
     card.appendChild(infoContainer);
+
     imgContainer.innerHTML = `
         <img class='card-img' src=${user.picture.large} alt='profile picture'>
     `;
@@ -79,16 +48,34 @@ const generateCardHTML = (users) => {
         <p class="card-text">${user.email}</p>
         <p class="card-text cap">${user.location.city}, ${user.location.state}</p>
     `;
+
+    // generates modal for specific employee card clicked
     card.addEventListener('click', () => {
       generateModalHTML(users, i)
     });
   };
 
+  // create search bar
+  const form = document.querySelector('.search-container')
+  form.innerHTML = `
+    <form action="#" method="get">
+      <input type="search" id="search-input" class="search-input" placeholder="Search...">
+      <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+    </form>
+  `
+  searchInput = document.getElementById('search-input')
   directoryFilter(searchInput)
 };
 
+/**
+ * @function generateModalHTML uses the data from the API to generate and display modal cards.
+ * 
+ * @param {API response} users 
+ * @param {index} index
+ */
 const generateModalHTML = (users, index) => {
   const user = users[index]
+  // create modal elements for DOM
   const modalContainer = document.createElement('div');
   const modal = document.createElement('div')
   const modalBtn = document.createElement('button')
@@ -103,6 +90,7 @@ const generateModalHTML = (users, index) => {
     const day = dateObj.getUTCDate();
     const year = dateObj.getUTCFullYear();
     const bDay = `${month}/${day}/${year}`;
+
   // style, classes, display:
   modalContainer.classList.add('modal-container');
   modal.classList.add('modal');
@@ -150,12 +138,22 @@ const generateModalHTML = (users, index) => {
       document.body.removeChild(modalContainer);
   });
 
+  // call functions for modal buttons
   prevModal(prev, modalContainer, users, index)
   nextModal(next, modalContainer, users, index)
 };
 
-const prevModal = (previous, modal, users, index) => {
-  previous.addEventListener('click', () => {
+/**
+ * @function prevModal creates eventListener for the previous modal button to cycle backwards through employee
+ * directory. Can cycle continously.
+ * 
+ * @param {object} button - reference to the prev button in the modal
+ * @param {object} modal - reference to the modal container  
+ * @param {object} users - reference to the API data 
+ * @param {object} index - reference to the index of each object in the API data array
+ */
+const prevModal = (button, modal, users, index) => {
+  button.addEventListener('click', () => {
     let currIndex = users.indexOf(users[index])
     let prevUser = currIndex-1
     if (currIndex === 0) {
@@ -166,8 +164,17 @@ const prevModal = (previous, modal, users, index) => {
   });
 }
 
-const nextModal = (next, modal, users, index) => {
-  next.addEventListener('click', () => {
+/**
+ * @function nextModal creates eventListener for the previous modal button to cycle forwards through employee
+ * directory. Can cycle continously.
+ * 
+ * @param {object} button - reference to the prev button in the modal
+ * @param {object} modal - reference to the modal container  
+ * @param {object} users - reference to the API data 
+ * @param {object} index - reference to the index of each object in the API data array
+ */
+const nextModal = (button, modal, users, index) => {
+  button.addEventListener('click', () => {
     let currIndex = users.indexOf(users[index])
     let nextUser = currIndex+1
      if (currIndex === users.length-1) {
@@ -178,6 +185,13 @@ const nextModal = (next, modal, users, index) => {
   });
 } 
 
+/**
+ * @function directoryFilter cycles through the directory and shows the user matching cards.
+ * hides cards that do not match.
+ * 
+ * @param {object} input - reference to the input element of the search bar. 
+ * 
+ */
 const directoryFilter = (input) => {
   const names = document.querySelectorAll('.card-name')
   input.addEventListener('keyup', (e) => {
