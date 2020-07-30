@@ -3,6 +3,9 @@
 ======================================== */
 
 @import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css2?family=Cardo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
+
 
 * {
 	box-sizing: border-box;
@@ -14,7 +17,7 @@ html, body {
 }
 
 body {
-    font-family: "Nunito", sans-serif;
+    font-family: 'Cardo', serif;
     text-align: center;
     background: rgba(235, 235, 235, 0.9);
 }
@@ -78,6 +81,7 @@ header h1 {
 }
   
 .card {
+    font-family: 'Josefin Sans', sans-serif;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
