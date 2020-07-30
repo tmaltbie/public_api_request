@@ -4,6 +4,7 @@
 
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 @import url('https://fonts.googleapis.com/css2?family=Cardo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Trirong:wght@500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
 
 
@@ -17,7 +18,7 @@ html, body {
 }
 
 body {
-    font-family: 'Cardo', serif;
+    font-family: 'Trirong', serif;
     text-align: center;
     background: rgba(235, 235, 235, 0.9);
 }
@@ -194,7 +195,7 @@ header h1 {
     margin: 10px auto auto;
     background: rgba(255, 255, 255, 1);
     border-radius: 0.25em;
-    border: 1px solid rgba(100, 100, 100, 0.3);
+    /* border: 1px solid rgba(100, 100, 100, 0.3); */
 }
 
 
